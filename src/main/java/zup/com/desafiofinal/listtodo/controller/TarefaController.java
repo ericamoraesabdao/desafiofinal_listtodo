@@ -22,7 +22,7 @@ public class TarefaController {
         tarefa.setId(dto.getId());
         tarefa.setNome(dto.getNome());
         tarefa.setPrioridade(dto.getPrioridade());
-        tarefa.setRealizado(dto.getRealizado());
+        tarefa.setRealizado(dto.getRealizado() != null ? dto.getRealizado() : false);
         tarefa.setDataCriacao(dto.getDataCriacao());
         tarefa.setDataConclusao(dto.getDataConclusao());
         // Conversão de anexos omitida para simplificação
@@ -61,6 +61,7 @@ public class TarefaController {
     @PostMapping
     public TarefaDTO criar(@RequestBody TarefaDTO dto) {
         Tarefa tarefa = toEntity(dto);
+        tarefa.setDataCriacao(java.time.LocalDateTime.now());
         Tarefa salva = tarefaService.salvar(tarefa);
         return toDTO(salva);
     }
