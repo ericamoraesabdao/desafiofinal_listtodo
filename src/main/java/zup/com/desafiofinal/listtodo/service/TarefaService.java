@@ -26,7 +26,10 @@ public class TarefaService {
         return tarefaRepository.save(tarefa);
     }
 
-    public void deletar() {
+    public void deletar(Long id) {
+        tarefaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Não existe a Tarefa para excluir."));
+        tarefaRepository.deleteById(id);
     }
 
     public List<Tarefa> atualizar(TarefaDTO dto) {

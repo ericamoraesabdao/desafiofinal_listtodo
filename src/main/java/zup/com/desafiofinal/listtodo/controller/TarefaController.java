@@ -71,9 +71,9 @@ public class TarefaController {
         return atualizadas.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deletar() {
-        tarefaService.deletar();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        tarefaService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }
