@@ -23,6 +23,9 @@ public class TarefaService {
     }
 
     public Tarefa salvar(Tarefa tarefa) {
+        if (tarefa.getDataCriacao() == null) {
+            tarefa.setDataCriacao(java.time.LocalDateTime.now());
+        }
         return tarefaRepository.save(tarefa);
     }
 
