@@ -42,8 +42,8 @@ public class TarefaController {
         return dto;
     }
 
-    @GetMapping("/status")
-    public List<TarefaDTO> buscarPorStatus(@RequestParam Boolean realizado) {
+    @GetMapping("/{realizado}")
+    public List<TarefaDTO> buscarPorStatus(@PathVariable Boolean realizado) {
         return tarefaService.buscarPorStatus(realizado)
                 .stream()
                 .map(this::toDTO)
