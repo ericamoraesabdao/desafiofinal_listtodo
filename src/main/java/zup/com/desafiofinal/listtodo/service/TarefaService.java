@@ -3,6 +3,7 @@ package zup.com.desafiofinal.listtodo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zup.com.desafiofinal.listtodo.dto.TarefaDTO;
+import zup.com.desafiofinal.listtodo.exception.NegocioException;
 import zup.com.desafiofinal.listtodo.model.Tarefa;
 import zup.com.desafiofinal.listtodo.repository.TarefaRepository;
 
@@ -23,6 +24,9 @@ public class TarefaService {
     }
 
     public Tarefa salvar(Tarefa tarefa) {
+        if (tarefa.getId() != null && tarefaRepository.existsById(tarefa.getId())) {
+            throw new NegocioException("Já existe uma tarefa com esse ID.");
+        }
         if (tarefa.getDataCriacao() == null) {
             tarefa.setDataCriacao(java.time.LocalDateTime.now());
         }
@@ -31,15 +35,17 @@ public class TarefaService {
 
     public void deletar(Long id) {
         tarefaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não existe a Tarefa para excluir."));
+                .orElseThrow(() -> new NegocioException("Não existe a Tarefa para excluir."));
         tarefaRepository.deleteById(id);
     }
 
     public List<Tarefa> atualizar(TarefaDTO dto) {
-        Tarefa tarefa = tarefaRepository.findById(dto.getId())
-                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada para atualização."));
+        if (dto.getId() == null) {
+            throw new NegocioException("O ID não pode ser nulo.");
+        }
 
-        // Atualiza apenas os campos permitidos
+        Tarefa tarefa = tarefaRepository.findById(dto.getId())
+                .orElseThrow(() -> new NegocioException("Tarefa não encontrada para atualização."));
         if (dto.getNome() != null) {
             tarefa.setNome(dto.getNome());
         }
