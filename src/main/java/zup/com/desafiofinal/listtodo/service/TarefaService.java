@@ -36,6 +36,42 @@ public class TarefaService {
     }
 
     public List<Tarefa> atualizar(TarefaDTO dto) {
-        return List.of();
+        Tarefa tarefa = tarefaRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada para atualização."));
+
+        // Atualiza apenas os campos permitidos
+        if (dto.getNome() != null) {
+            tarefa.setNome(dto.getNome());
+        }
+        if (dto.getPrioridade() != null) {
+            tarefa.setPrioridade(dto.getPrioridade());
+        }
+        if (dto.getRealizado() != null) {
+            tarefa.setRealizado(dto.getRealizado());
+            if (Boolean.TRUE.equals(tarefa.getRealizado())) {
+                tarefa.setDataConclusao(java.time.LocalDateTime.now());
+            } else {
+                tarefa.setDataConclusao(null);
+            }
+
+        }
+
+        Tarefa atualizada = tarefaRepository.save(tarefa);
+        return List.of(atualizada);
+    }
+
+    public Tarefa atualizarRealizado(Long id, Boolean realizado) {
+        Tarefa tarefa = tarefaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada."));
+
+        tarefa.setRealizado(realizado);
+
+        if (Boolean.TRUE.equals(realizado)) {
+            tarefa.setDataConclusao(java.time.LocalDateTime.now());
+        } else {
+            tarefa.setDataConclusao(null);
+        }
+
+        return tarefaRepository.save(tarefa);
     }
 }
