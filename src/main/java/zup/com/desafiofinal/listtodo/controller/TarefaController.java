@@ -25,11 +25,9 @@ public class TarefaController {
         tarefa.setRealizado(dto.getRealizado() != null ? dto.getRealizado() : false);
         tarefa.setDataCriacao(dto.getDataCriacao());
         tarefa.setDataConclusao(dto.getDataConclusao());
-        // Conversão de anexos omitida para simplificação
         return tarefa;
     }
 
-    // Converter Entidade para DTO
     private TarefaDTO toDTO(Tarefa tarefa) {
         TarefaDTO dto = new TarefaDTO();
         dto.setId(tarefa.getId());
@@ -38,7 +36,6 @@ public class TarefaController {
         dto.setRealizado(tarefa.getRealizado());
         dto.setDataCriacao(tarefa.getDataCriacao());
         dto.setDataConclusao(tarefa.getDataConclusao());
-        // Conversão de anexos omitida para simplificação
         return dto;
     }
 
