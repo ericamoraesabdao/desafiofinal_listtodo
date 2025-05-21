@@ -66,6 +66,12 @@ public class TarefaController {
         return toDTO(salva);
     }
 
+    @PatchMapping("/{id}/realizado")
+    public TarefaDTO atualizarRealizado(@PathVariable Long id, @RequestBody Boolean realizado) {
+        Tarefa tarefaAtualizada = tarefaService.atualizarRealizado(id, realizado);
+        return toDTO(tarefaAtualizada);
+    }
+
     @PutMapping
     public List<TarefaDTO> atualizar(@RequestBody TarefaDTO dto) {
         List<Tarefa> atualizadas = tarefaService.atualizar(dto);
