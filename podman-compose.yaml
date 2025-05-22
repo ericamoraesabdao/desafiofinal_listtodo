@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-container
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - listtodo
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: on-failure
+    ports:
+      - "5433:5432"
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: ./Podfile
+    container_name: listtodo-container
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST_CONTAINER}:${DB_PORT_CONTAINER}/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    restart: on-failure
+    networks:
+      - listtodo
+    ports:
+      - "8080:8080"
+
+networks:
+  listtodo:
+
+volumes:
+  postgres-data:
