@@ -33,6 +33,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Load environment variables
+        run: |
+          if [ -f .env ]; then
+            echo "Loading environment variables from .env"
+            export $(grep -v '^#' .env | xargs)
+            printenv | grep -E 'DB_HOST|DB_PORT|DB_NAME|DB_USERNAME|DB_PASSWORD' >> $GITHUB_ENV
+          fi
+
       - name: Install Podman and Podman-Compose
         run: |
           sudo apt-get update
