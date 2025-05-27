@@ -116,13 +116,21 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Update Lambda function code
+      - name: Zip JAR for Lambda
         run: |
           JAR_FILE=$(ls *.jar | head -n 1)
           zip lambda.zip $JAR_FILE
+
+      - name: Upload ZIP to S3
+        run: |
+          aws s3 cp lambda.zip s3://list-to-desafio/lambda.zip
+
+      - name: Update Lambda function code from S3
+        run: |
           aws lambda update-function-code \
             --function-name lambda-listtodo \
-            --zip-file fileb://lambda.zip
+            --s3-bucket list-to-desafio \
+            --s3-key lambda.zip
 
       - name: Update Lambda environment variables
         run: |
