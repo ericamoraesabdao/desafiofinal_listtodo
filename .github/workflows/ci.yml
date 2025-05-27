@@ -119,18 +119,34 @@ jobs:
       - name: Zip JAR for Lambda
         run: |
           JAR_FILE=$(ls *.jar | head -n 1)
-          zip lambda.zip $JAR_FILE
+          zip listtodo.zip $JAR_FILE
 
       - name: Upload ZIP to S3
         run: |
-          aws s3 cp lambda.zip s3://list-to-desafio/lambda.zip
+          aws s3 cp listtodo.zip s3://list-to-desafio/listtodo.zip
 
       - name: Update Lambda function code from S3
         run: |
           aws lambda update-function-code \
             --function-name lambda-listtodo \
             --s3-bucket list-to-desafio \
-            --s3-key lambda.zip
+            --s3-key listtodo.zip
+
+      - name: Wait for Lambda update to finish
+        run: |
+          for i in {1..20}; do
+            STATUS=$(aws lambda get-function-configuration --function-name lambda-listtodo --query 'LastUpdateStatus' --output text)
+            echo "Current status: $STATUS"
+            if [ "$STATUS" = "Successful" ]; then
+              echo "Lambda update completed."
+              break
+            elif [ "$STATUS" = "Failed" ]; then
+              echo "Lambda update failed."
+              exit 1
+            fi
+            echo "Waiting for Lambda update to finish..."
+            sleep 5
+          done
 
       - name: Update Lambda environment variables
         run: |
