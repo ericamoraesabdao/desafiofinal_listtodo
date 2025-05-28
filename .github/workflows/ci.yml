@@ -116,24 +116,19 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Zip JAR for Lambda
-        run: |
-          JAR_FILE=$(ls *.jar | head -n 1)
-          zip listtodo.zip $JAR_FILE
 
-      - name: List ZIP contents
-        run: unzip -l listtodo.zip
+      - name: Upload JAR to S3
+        run: aws s3 cp target/listtodo-0.0.1-SNAPSHOT.jar s3://list-to-desafio/listtodo-0.0.1-SNAPSHOT.jar
 
-      - name: Upload ZIP to S3
-        run: |
-          aws s3 cp listtodo.zip s3://list-to-desafio/listtodo.zip
+      - name: Update Lambda function code from S3
+        run: aws lambda update-function-code --function-name lambda-listtodo --s3-bucket list-to-desafio --s3-key listtodo-0.0.1-SNAPSHOT.jar
 
       - name: Update Lambda function code from S3
         run: |
           aws lambda update-function-code \
             --function-name lambda-listtodo \
             --s3-bucket list-to-desafio \
-            --s3-key listtodo.zip
+            --s3-key listtodo-0.0.1-SNAPSHOT.jar
 
       - name: Wait for Lambda update to finish
         run: |
