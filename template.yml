@@ -6,12 +6,12 @@ Globals:
     EndpointConfiguration: REGIONAL
 
 Resources:
-  AwsLambdaExampleFunction:
+  LambdaListtodoFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: zup.com.desafiofinal.listtodo.StreamLambdaHandler::handleRequest
       Runtime: java17
-      CodeUri: .
+      CodeUri: target/listtodo-0.0.1-SNAPSHOT.jar
       MemorySize: 512
       Policies: AWSLambdaBasicExecutionRole
       Timeout: 30
