@@ -121,6 +121,9 @@ jobs:
           JAR_FILE=$(ls *.jar | head -n 1)
           zip listtodo.zip $JAR_FILE
 
+      - name: List ZIP contents
+        run: unzip -l listtodo.zip
+
       - name: Upload ZIP to S3
         run: |
           aws s3 cp listtodo.zip s3://list-to-desafio/listtodo.zip
