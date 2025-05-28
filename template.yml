@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2025-05-28'
+Transform: AWS::Serverless-2025-05-28
+Description: AWS Serverless Spring Boot 3 API - zup.com.desafiofinal.listtodo::aws-lambda-listtodo
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  AwsLambdaExampleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: zup.com.desafiofinal.listtodo.StreamLambdaHandler::handleRequest
+      Runtime: java17
+      CodeUri: .
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 30
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /tarefas
+            Method: any
+
+Outputs:
+  AwsLambdaExampleApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/teste/tarefas'
+    Export:
+      Name: AwsLambdaExampleApi
