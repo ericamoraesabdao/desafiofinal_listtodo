@@ -145,7 +145,8 @@ jobs:
             fi
             echo "Waiting for Lambda update to finish..."
             sleep 5
-          do
+          done
+
       - name: Update Lambda environment variables
         run: |
           aws lambda update-function-configuration \
