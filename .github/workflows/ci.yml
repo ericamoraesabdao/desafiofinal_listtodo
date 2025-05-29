@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lambda-jar
-          path: target/*.jar
+          path: target/listtodo-0.0.1-SNAPSHOT.jar
 
   deploy:
     needs: build-and-test
@@ -118,18 +118,14 @@ jobs:
           aws-region: us-east-1
 
       - name: Upload JAR to S3
-        run: aws s3 cp target/listtodo-0.0.1-SNAPSHOT.jar s3://list-to-desafio/listtodo-0.0.1-SNAPSHOT.jar
-
-      - name: Update Lambda function code from S3
-        run: aws lambda update-function-code --function-name lambda-listtodo --s3-bucket list-to-desafio --s3-key listtodo-0.0.1-SNAPSHOT.jar
+        run: aws s3 cp listtodo-0.0.1-SNAPSHOT.jar s3://list-to-desafio/listtodo-0.0.1-SNAPSHOT.jar
 
       - name: Update Lambda function code from S3
         run: |
           aws lambda update-function-code \
             --function-name lambda-listtodo \
             --s3-bucket list-to-desafio \
-            --s3-key listtodo-0.0.1-SNAPSHOT.jar
-
+            --s3-key listtodo-0.0.1-SNAPSHOT.j
       - name: Wait for Lambda update to finish
         run: |
           for i in {1..20}; do
@@ -144,8 +140,7 @@ jobs:
             fi
             echo "Waiting for Lambda update to finish..."
             sleep 5
-          done
-
+          do
       - name: Update Lambda environment variables
         run: |
           aws lambda update-function-configuration \
