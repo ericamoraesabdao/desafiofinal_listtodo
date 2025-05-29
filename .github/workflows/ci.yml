@@ -126,6 +126,7 @@ jobs:
             --function-name lambda-listtodo \
             --s3-bucket list-to-desafio \
             --s3-key listtodo-0.0.1-SNAPSHOT.j
+
       - name: Wait for Lambda update to finish
         run: |
           for i in {1..20}; do
