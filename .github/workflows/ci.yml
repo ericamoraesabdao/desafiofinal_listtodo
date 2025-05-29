@@ -110,6 +110,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lambda-jar
+
+      - name: List files after download
+        run: ls -lR
+
       - name: Move JAR to workspace root
         run: mv lambda-jar/listtodo-0.0.1-SNAPSHOT.jar .
 
