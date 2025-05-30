@@ -30,6 +30,16 @@ public class TarefaService {
         if (tarefa.getDataCriacao() == null) {
             tarefa.setDataCriacao(java.time.LocalDateTime.now());
         }
+        if (tarefa.getRealizado() != null) {
+            tarefa.setRealizado(tarefa.getRealizado());
+            if (Boolean.TRUE.equals(tarefa.getRealizado())) {
+                tarefa.setDataConclusao(java.time.LocalDateTime.now());
+            } else {
+                tarefa.setDataConclusao(null);
+            }
+
+        }
+
         return tarefaRepository.save(tarefa);
     }
 
